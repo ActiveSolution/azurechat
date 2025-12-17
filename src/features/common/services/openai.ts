@@ -9,13 +9,11 @@ export const OpenAIInstance =  (deploymentOverride?: string) => {
   const token = process.env.AZURE_OPENAI_API_KEY;
 
   // Resolve model/instance/deployment based on optional override
-  const defaultInstance = process.env.AZURE_OPENAI_API_INSTANCE_NAME;
+  const instanceName = process.env.AZURE_OPENAI_API_INSTANCE_NAME;
   const defaultDeployment = process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME;
-  const defaultApiVersion = process.env.AZURE_OPENAI_API_VERSION;
+  const apiVersion = process.env.AZURE_OPENAI_API_VERSION;
 
-  let instanceName = defaultInstance;
   let deploymentName = defaultDeployment;
-  let apiVersion = defaultApiVersion;
 
   if (deploymentOverride) {
     for (let i = 1; ; i++) {
@@ -24,10 +22,8 @@ export const OpenAIInstance =  (deploymentOverride?: string) => {
       // Failsafe
       if (!instanceCandidate && i > 100) break;
       if (!instanceCandidate) continue;
-      if (instanceCandidate === deploymentOverride) {;
-        const ver = process.env[`AZURE_OPENAI_API_VERSION_MODEL_${i}`];
+      if (instanceCandidate === deploymentOverride) {
         deploymentName = instanceCandidate;
-        if (ver) apiVersion = ver;
         break;
       }
     }
@@ -43,7 +39,6 @@ export const OpenAIInstance =  (deploymentOverride?: string) => {
       apiVersion,
       baseURL: `https://${instanceName}.${endpointSuffix}/openai/deployments/${deploymentName}`
     });
-     console.log(`Testdata baseURL: https://${instanceName}.${endpointSuffix}/openai/deployments/${deploymentName}`);
     return client;
   } else {
     const openai = new OpenAI({

@@ -61,7 +61,7 @@ const ModelSelect: FC = () => {
   return (
     <Select value={selectedModel} onValueChange={onChange}>
       <SelectTrigger className="w-44">
-        <SelectValue placeholder="Välj modell" />
+        <SelectValue placeholder="Choose model" />
       </SelectTrigger>
       <SelectContent>
         {/* Use your Azure OpenAI deployment names here */}

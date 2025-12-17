@@ -105,8 +105,8 @@ var mappedAdditionalDeployments = [
     name: addition.name
     model: {
       format: 'OpenAI'
-      name: addition.modelName
-      version: addition.modelVersion
+      name: addition.model.name
+      version: addition.model.version
     }
     sku: {
       name: 'GlobalStandard'
@@ -241,18 +241,6 @@ var additionalModelSettingsDeployment = [
   }
 ]
 
-var additionalModelSettingsVersion = [
-  for (deployment, i) in mappedAdditionalDeployments: {
-    name: 'AZURE_OPENAI_API_VERSION_MODEL_${i + 1}'
-    value: deployment.model.version
-  }
-]
-
-var additionalModelSettings = concat(
-  additionalModelSettingsDeployment,
-  additionalModelSettingsVersion
-)
-
 var appSettingsWithLocalAuth = disableLocalAuth
   ? []
   : [
@@ -297,7 +285,7 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
       appCommandLine: 'next start'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      appSettings: concat(appSettingsCommon, additionalModelSettings, appSettingsWithLocalAuth)
+      appSettings: concat(appSettingsCommon, additionalModelSettingsDeployment, appSettingsWithLocalAuth)
     }
   }
   identity: { type: 'SystemAssigned' }
@@ -542,12 +530,10 @@ resource llmdeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
       model: deployment.model
       /*raiPolicyName: contains(deployment, 'raiPolicyName') ? deployment.raiPolicyName : null*/
     }
-    sku: contains(deployment, 'sku')
-      ? deployment.sku
-      : {
-          name: 'Standard'
-          capacity: deployment.capacity
-        }
+    sku: deployment.?sku ?? {
+      name: 'Standard'
+      capacity: deployment.capacity
+    }
   }
 ]
 

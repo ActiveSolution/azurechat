@@ -97,7 +97,7 @@ param additionalLlmDeployments array = [
     name: 'gpt-5'
     model: {
       name: 'gpt-5'
-      version: '2025-01-01-preview'
+      version: '2025-08-07'
     }
     sku: {
       capacity: 120
@@ -107,7 +107,7 @@ param additionalLlmDeployments array = [
     name: 'gpt-5-mini'
     model: {
       name: 'gpt-5-mini'
-      version: '2025-01-01-preview'
+      version: '2025-08-07'
     }
     sku: {
       capacity: 120
