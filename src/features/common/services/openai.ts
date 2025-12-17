@@ -16,11 +16,9 @@ export const OpenAIInstance =  (deploymentOverride?: string) => {
   let deploymentName = defaultDeployment;
 
   if (deploymentOverride) {
-    for (let i = 1; ; i++) {
+    for (let i = 1; i <= 100; i++) {
       const key = `AZURE_OPENAI_API_DEPLOYMENT_NAME_MODEL_${i}`;
       const instanceCandidate = process.env[key];
-      // Failsafe
-      if (!instanceCandidate && i > 100) break;
       if (!instanceCandidate) continue;
       if (instanceCandidate === deploymentOverride) {
         deploymentName = instanceCandidate;
